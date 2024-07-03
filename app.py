@@ -5,6 +5,15 @@ import numpy as np
 # Load the saved model
 model = tf.keras.models.load_model('Tomato_60.h5')
 
+# Define your class names
+classes = [
+    'Tomato_Bacterial_spot', 'Tomato_Early_blight', 'Tomato_Late_blight',
+    'Tomato_Leaf_Mold', 'Tomato_Septoria_leaf_spot',
+    'Tomato_Spider_mites_Two_spotted_spider_mite', 'Tomato__Target_Spot',
+    'Tomato__Tomato_YellowLeaf__Curl_Virus', 'Tomato__Tomato_mosaic_virus',
+    'Tomato_healthy'
+]
+
 # Function to preprocess the image
 def preprocess_image(image):
     image = tf.image.decode_image(image, channels=3)  # Decode the image
@@ -31,5 +40,5 @@ if file is not None:
 
     if st.button('Predict'):
         predicted_class, confidence = predict(image)
-        st.write(f"Predicted Class: {class_names[predicted_class]}")
+        st.write(f"Predicted Class: {classes[predicted_class]}")
         st.write(f"Confidence: {confidence:.2f}%")
