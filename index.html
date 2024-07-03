@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomato Disease Classification</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="tomato.html">Tomato Diseases</a>
+        <a href="model.html">Model Performance</a>
+    </nav>
+    <div class="container">
+        <h1>Tomato Disease Classification</h1>
+        <div>
+            <img id="image-preview" src="#" alt="Tomato Image Preview">
+        </div>
+        <div>
+            <img id="preprocessed-image" src="#" alt="Preprocessed Image Preview" style="display:none;">
+        </div>
+        <input type="file" accept="image/*" onchange="previewImage(event)">
+        <button class="btn" onclick="identifyDisease()">Identify Disease</button>
+        <div id="result"></div>
+        <script>
+            function previewImage(event) {
+                var input = event.target;
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var img = document.getElementById("image-preview");
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+
+            function identifyDisease() {
+                var formData = new FormData();
+                var fileInput = document.querySelector('input[type="file"]');
+                formData.append('file', fileInput.files[0]);
+
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var resultDiv = document.getElementById('result');
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <h2>Predicted Disease</h2>
+                            <p>${data.predicted_class}</p>
+                            <h2>Treatment Suggestions</h2>
+                            <p>${data.treatment}</p>
+                        `;
+                        var preprocessedImg = document.getElementById('preprocessed-image');
+                        preprocessedImg.src = 'data:image/png;base64,' + data.preprocessed_image;
+                        preprocessedImg.style.display = 'block';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        </script>
+    </div>
+</body>
+</html>
