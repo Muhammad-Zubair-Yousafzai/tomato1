@@ -14,6 +14,20 @@ classes = [
     'Tomato_healthy'
 ]
 
+# Treatment suggestions
+suggestions = {
+    'Tomato_Bacterial_spot': 'A plant with bacterial spot cannot be cured. Remove symptomatic plants from the field or greenhouse to prevent the spread of bacteria to healthy plants. Burn, bury or hot compost the affected plants and DO NOT eat symptomatic fruit.',
+    'Tomato_Early_blight': 'Cure the plant quickly otherwise the disease can spread. Thoroughly spray the plant (bottoms of leaves also) with Bonide Liquid Copper Fungicide concentrate or Bonide Tomato & Vegetable.',
+    'Tomato_Late_blight': 'Spraying fungicides is the most effective way to prevent late blight. For conventional gardeners and commercial producers, protectant fungicides such as chlorothalonil (e.g., Bravo, Echo, Equus, or Daconil) and Mancozeb (Manzate) can be used.',
+    'Tomato_Leaf_Mold': 'Baking soda solution: Mix 1 tablespoon baking soda and ½ teaspoon liquid soap such as Castile soap (not detergent) in 1 gallon of water. Spray liberally, getting top and bottom leaf surfaces and any affected areas.',
+    'Tomato_Septoria_leaf_spot': 'Fungicides with active ingredients such as chlorothalonil, copper, or mancozeb will help reduce disease, but they must be applied before disease occurs as they can only provide preventative protection. They will not cure the plant. If the disease has spread, then remove the plants.',
+    'Tomato_Spider_mites_Two_spotted_spider_mite': 'Aim a hard stream of water at infested plants to knock spider mites off the plants. Other options include insecticidal soaps, horticultural oils, or neem oil.',
+    'Tomato__Target_Spot': 'Products containing chlorothalonil, mancozeb, and copper oxychloride have been shown to provide good control of target spot in research trials.',
+    'Tomato__Tomato_YellowLeaf__Curl_Virus': 'Use a neonicotinoid insecticide, such as dinotefuran (Venom) imidacloprid (AdmirePro, Alias, Nuprid, Widow, and others) or thiamethoxam (Platinum), as a soil application or through the drip irrigation system at transplanting of tomatoes or peppers.',
+    'Tomato__Tomato_mosaic_virus': 'Remove all infected plants and destroy them. Do NOT put them in the compost pile, as the virus may persist in infected plant matter. Monitor the rest of your plants closely, especially those that were located near infected plants. Disinfect gardening tools after every use.',
+    'Tomato_healthy': 'Your plant is healthy, there is no need to apply medicines. Please take care of your plants. If any disease occurs, then cure it fast and remove the infected leaves.'
+}
+
 # Function to preprocess the image
 def preprocess_image(image):
     image = tf.image.decode_image(image, channels=3)  # Decode the image
@@ -42,3 +56,8 @@ if file is not None:
         predicted_class, confidence = predict(image)
         st.write(f"Predicted Class: {classes[predicted_class]}")
         st.write(f"Confidence: {confidence:.2f}%")
+        
+        # Display treatment suggestion
+        disease = classes[predicted_class]
+        st.write("Treatment Suggestion:")
+        st.write(suggestions[disease])
