@@ -7,9 +7,10 @@ model = tf.keras.models.load_model('Tomato_60.h5')
 
 # Function to preprocess the image
 def preprocess_image(image):
-    image = tf.image.resize(image, (256, 256))
-    image = tf.image.convert_image_dtype(image, tf.float32)
-    image = tf.expand_dims(image, axis=0)
+    image = tf.image.decode_image(image, channels=3)  # Decode the image
+    image = tf.image.resize(image, (256, 256))        # Resize the image
+    image = tf.image.convert_image_dtype(image, tf.float32)  # Convert to float32
+    image = tf.expand_dims(image, axis=0)            # Add batch dimension
     return image
 
 # Function to make predictions
@@ -25,8 +26,8 @@ st.title('Tomato Disease Classifier')
 file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 if file is not None:
-    image = tf.image.decode_image(file.read(), channels=3)
-    st.image(image, caption='Uploaded Image.', use_column_width=True)
+    image = file.read()  # Read the uploaded file as bytes
+    st.image(image, caption='Uploaded Image.', use_column_width=True)  # Display the uploaded image
 
     if st.button('Predict'):
         predicted_class, confidence = predict(image)
