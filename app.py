@@ -44,37 +44,20 @@ def predict(image):
     confidence = np.max(prediction[0]) * 100
     return predicted_class, confidence
 
-# Read file content
-def read_file(file_path):
-    with open(file_path, 'r') as file:
-        data = file.read()
-    return data
-
 # Streamlit App
-def main():
-    st.title('Tomato Disease Classifier')
+st.title('Tomato Disease Classifier')
+file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
-    # Embedding custom HTML
-    st.markdown(read_file('index.html'), unsafe_allow_html=True)
+if file is not None:
+    image = file.read()  # Read the uploaded file as bytes
+    st.image(image, caption='Uploaded Image.', use_column_width=True)  # Display the uploaded image
 
-    # Embedding custom CSS
-    st.markdown(f'<style>{read_file("styles.css")}</style>', unsafe_allow_html=True)
-
-    file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-
-    if file is not None:
-        image = file.read()  # Read the uploaded file as bytes
-        st.image(image, caption='Uploaded Image.', use_column_width=True)  # Display the uploaded image
-
-        if st.button('Predict'):
-            predicted_class, confidence = predict(image)
-            st.write(f"Predicted Class: {classes[predicted_class]}")
-            st.write(f"Confidence: {confidence:.2f}%")
-
-            # Display treatment suggestion
-            disease = classes[predicted_class]
-            st.write("Treatment Suggestion:")
-            st.write(suggestions[disease])
-
-if __name__ == '__main__':
-    main()
+    if st.button('Predict'):
+        predicted_class, confidence = predict(image)
+        st.write(f"Predicted Class: {classes[predicted_class]}")
+        st.write(f"Confidence: {confidence:.2f}%")
+        
+        # Display treatment suggestion
+        disease = classes[predicted_class]
+        st.write("Treatment Suggestion:")
+        st.write(suggestions[disease])
